@@ -76,74 +76,78 @@ if generate_particle_field_images;
         I=perform_ray_tracing_03(piv_simulation_parameters,optical_system,pixel_gain,scattering_data,scattering_type,lightfield_source);
         
         % This is the filename to save the image data to
-        image_filename_write=[particle_image_directory,'particle_image_frame_',sprintf('%04.0f',frame_index),'.tif'];
+%         image_filename_write=[particle_image_directory,'particle_image_frame_',sprintf('%04.0f',frame_index),'.tif'];
         % This saves the image to memory
-        imwrite(I,image_filename_write,'tif','Compression','none');
+%         imwrite(I,image_filename_write,'tif','Compression','none');
+        
+        image_filename_write=[particle_image_directory,'particle_image_frame_',sprintf('%04.0f',frame_index),'.bin'];
+        fid = fopen(image_filename_write,'wb');
+        fwrite(fid,I,'double');
         
     end;
 
 end;
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Calibration Grid Simulation                                             %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% This extracts the Boolean value stating whether to generate the calibration
-% images from the structure
-generate_calibration_grid_images=piv_simulation_parameters.calibration_grid.generate_calibration_grid_images;
-% This extracts the calibration plane number from the structure
-calibration_plane_number=piv_simulation_parameters.calibration_grid.calibration_plane_number;
-% This extracts the directory to save the calibration grid images from 
-% parameters structure
-calibration_grid_image_directory=piv_simulation_parameters.output_data.calibration_grid_image_directory;
-% This extracts the number of lightrays to simulate per particle (this is roughly
-% equivalent to the power of the laser)
-lightray_number_per_particle=piv_simulation_parameters.calibration_grid.lightray_number_per_particle;
-% This extracts the number of lightrays to propogate per iteration (this is a
-% function of the RAM available on the computer)
-lightray_process_number=piv_simulation_parameters.calibration_grid.lightray_process_number;
-% This is the gain of the sensor in decibels to be used in the calibration 
-% grid simulation
-pixel_gain=piv_simulation_parameters.calibration_grid.pixel_gain;
-
-% This generates the calibration grid images if specified by the parameters
-% structure
-if generate_calibration_grid_images;
-    
-    % This displays that the calibration images are being simulated
-    fprintf('\n\n');
-    disp('Simulating calibration images . . . ');
-    
-    % This sets the scattering type to diffuse for the calibration grid
-    % simulation
-    scattering_type='diffuse';
-    % This sets the scattering data to a Null value for the calibration grid
-    scattering_data=[];
-    
-    % This iterates through the calibration grid planes performing the ray
-    % tracing operations for each plane
-    for plane_index=1:calibration_plane_number;
-        
-        % This creates the lightfield data for performing the raytracing operation
-        lightfield_source=generate_calibration_lightfield_data(piv_simulation_parameters,optical_system,plane_index);
-        % This adds the number of lightrays per particle to the
-        % 'lightfield_source' data
-        lightfield_source.lightray_number_per_particle=lightray_number_per_particle;
-        % This adds the number of lightrays to simulateously process to the
-        % 'lightfield_source' data
-        lightfield_source.lightray_process_number=lightray_process_number;
-        
-        % This performs the ray tracing to generate the sensor image
-        I=perform_ray_tracing_03(piv_simulation_parameters,optical_system,pixel_gain,scattering_data,scattering_type,lightfield_source);
-        
-        % This is the filename to save the image data to
-        image_filename_write=[calibration_grid_image_directory,'calibration_image_plane_',sprintf('%04.0f',plane_index),'.tif'];
-        % This saves the image to memory
-        imwrite(I,image_filename_write,'tif','Compression','none');
-        
-    end;
-    
-end;
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Calibration Grid Simulation                                             %
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+% % This extracts the Boolean value stating whether to generate the calibration
+% % images from the structure
+% generate_calibration_grid_images=piv_simulation_parameters.calibration_grid.generate_calibration_grid_images;
+% % This extracts the calibration plane number from the structure
+% calibration_plane_number=piv_simulation_parameters.calibration_grid.calibration_plane_number;
+% % This extracts the directory to save the calibration grid images from 
+% % parameters structure
+% calibration_grid_image_directory=piv_simulation_parameters.output_data.calibration_grid_image_directory;
+% % This extracts the number of lightrays to simulate per particle (this is roughly
+% % equivalent to the power of the laser)
+% lightray_number_per_particle=piv_simulation_parameters.calibration_grid.lightray_number_per_particle;
+% % This extracts the number of lightrays to propogate per iteration (this is a
+% % function of the RAM available on the computer)
+% lightray_process_number=piv_simulation_parameters.calibration_grid.lightray_process_number;
+% % This is the gain of the sensor in decibels to be used in the calibration 
+% % grid simulation
+% pixel_gain=piv_simulation_parameters.calibration_grid.pixel_gain;
+% 
+% % This generates the calibration grid images if specified by the parameters
+% % structure
+% if generate_calibration_grid_images;
+%     
+%     % This displays that the calibration images are being simulated
+%     fprintf('\n\n');
+%     disp('Simulating calibration images . . . ');
+%     
+%     % This sets the scattering type to diffuse for the calibration grid
+%     % simulation
+%     scattering_type='diffuse';
+%     % This sets the scattering data to a Null value for the calibration grid
+%     scattering_data=[];
+%     
+%     % This iterates through the calibration grid planes performing the ray
+%     % tracing operations for each plane
+%     for plane_index=1:calibration_plane_number;
+%         
+%         % This creates the lightfield data for performing the raytracing operation
+%         lightfield_source=generate_calibration_lightfield_data(piv_simulation_parameters,optical_system,plane_index);
+%         % This adds the number of lightrays per particle to the
+%         % 'lightfield_source' data
+%         lightfield_source.lightray_number_per_particle=lightray_number_per_particle;
+%         % This adds the number of lightrays to simulateously process to the
+%         % 'lightfield_source' data
+%         lightfield_source.lightray_process_number=lightray_process_number;
+%         
+%         % This performs the ray tracing to generate the sensor image
+%         I=perform_ray_tracing_03(piv_simulation_parameters,optical_system,pixel_gain,scattering_data,scattering_type,lightfield_source);
+%         
+%         % This is the filename to save the image data to
+%         image_filename_write=[calibration_grid_image_directory,'calibration_image_plane_',sprintf('%04.0f',plane_index),'.tif'];
+%         % This saves the image to memory
+%         imwrite(I,image_filename_write,'tif','Compression','none');
+%         
+%     end;
+%     
+% end;
 
 
 

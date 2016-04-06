@@ -103,9 +103,11 @@ element_center(:,3)=element_center(:,3)+(z_lens);
 % This initializes the sensor image
 I=zeros(x_pixel_number,y_pixel_number);
 
-lightray_process_number = 100000;
+lightray_process_number = 1000000;
 lightray_number_per_particle = 10000;
 
+% lightray_process_number = 1000;
+% lightray_number_per_particle = 10;
 
 % This generates an array of indices into the source points to calculate the lightfield
 lightfield_vector=1:ceil(lightray_process_number/lightray_number_per_particle):length(lightfield_source.x);
@@ -213,19 +215,21 @@ end;
 % Rescales and resamples image for export                                 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%{
 % % This rescales the image intensity to account for the pixel gain
-% I=I*10^(pixel_gain/20);
+I=I*10^(pixel_gain/20);
 % 
 % % This rescales the image to values ranging from 0 to 2^bit_depth-1
-% I=(2^pixel_bit_depth-1)*I/(2^16-1);
+I=(2^pixel_bit_depth-1)*I/(2^16-1);
 % % This rounds the values of the image to the nearest integer
-% I=round(I);
+I=round(I);
 % % This rescales the image to the full 16 bit range (but only bit_depth bits
 % % of information are now used)
-% I=I*(2^16-1)/(2^pixel_bit_depth-1);
+I=I*(2^16-1)/(2^pixel_bit_depth-1);
 % 
 % % This converts the image from double precision to 16 bit precision
-% I=uint16(I);
+I=uint16(I);
+%}
 temp = 2;
 
 
@@ -1546,7 +1550,8 @@ if strcmp(surface,'front');
         % This gives the first intersection time variable (ie the minimum
         % of 't1' and 't2' that is non-NaN, in the case where both 't1' 
         % and 't2' have NaN values, the output of 't' is also NaN)
-        t=nanmin(t1,[],t2);
+%         t=nanmin(t1,t2);
+        t = nanmin(t1,[],t2);
     elseif R<=0;
         % This gives the second intersection time variable (ie the maximum
         % of 't1' and 't2' that is non-NaN, in the case where both 't1' 
@@ -1569,7 +1574,8 @@ elseif strcmp(surface,'back');
         % of 't1' and 't2' that is non-NaN, in the case where both 't1' 
         % and 't2' have NaN values, the output of 't' is also NaN)
         %t=nanmin(t1,t2);
-        t=nanmax(t1,[],t2);
+%         t=nanmax(t1,t2);
+        t = nanmax(t1, [], t2);
     end;
 end;
 
